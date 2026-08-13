@@ -34,9 +34,9 @@ Thank you for every ordinary evening. For the bickering, for the snacks at midni
 
 I don't need a wish this year. I already got the good one.
 
-I love you. Please eat the cake. It took four tries.
+I love you. For the best of us.
 
-— your Syl ♡`;
+— your husband ♡`;
 
 /* little lines that pop up if she clicks the photo on the wall */
 const PHOTO_LINES = [
