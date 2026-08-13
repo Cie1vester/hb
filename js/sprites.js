@@ -122,11 +122,10 @@ function outlined(g, px, py, fn, col) {
 
 const PAL = {
   purin: {
-    lite: '#FFF3C4', base: '#FBDD86', mid: '#F2C95F', dark: '#DFAC46',
-    beret: '#8A5A32', beretDark: '#664021', beretLite: '#A87540',
-    cloth: '#9BD9EE', clothDk: '#6BB4D6', clothLt: '#CDEEF9',
-    ink: '#33241A', nose: '#C08A56', mouth: '#5E4128', blush: '#FFA6BE',
-    line: '#33241A'
+    lite: '#FFF4C8', base: '#FBE08C', mid: '#F4CE6A', dark: '#E0B44C',
+    beret: '#8A4634', beretDark: '#6B3427', beretLite: '#A45C46',
+    ink: '#2A2018', nose: '#6B4430', mouth: '#6B4430', blush: '#FFA6BE',
+    line: '#B5792F'          // soft golden-brown, like the reference
   },
   kuromi: {
     lite: '#FFFFFF', base: '#F8F5FB', mid: '#E3DAEC', dark: '#CBBEDC',
@@ -149,25 +148,27 @@ const PAL = {
    One rounded blob for head+body, brown beret on top, long floppy
    ears hanging at the sides, dot eyes, little nose, wide smile. */
 
+/* His eyes are small dots set close together — in the reference they're
+   about 3px across and 10px apart on a 32px-wide face. */
 function purinEyes(g, x, y, face, p) {
-  const L = x - 8, R = x + 8;
-  const dot = (cx, w, h) => PX.ell(g, cx, y, w, h, p.ink);
+  const L = x - 5, R = x + 5;
+  const dot = (cx, w, h) => PX.rect(g, cx - (w >> 1), y - (h >> 1), w, h, p.ink);
   const arc = (cx) => {
-    for (let i = -4; i <= 4; i++) PX.rect(g, cx + i, y + Math.abs(i) * 0.5 - 1.5, 1, 1, p.ink);
+    for (let i = -2; i <= 2; i++) PX.rect(g, cx + i, y + Math.abs(i) - 1, 1, 1, p.ink);
   };
-  const flat = (cx) => PX.rect(g, cx - 4, y, 9, 2, p.ink);
+  const flat = (cx) => PX.rect(g, cx - 2, y, 4, 1, p.ink);
 
   switch (face) {
     case 'happy': case 'proud': case 'blush': case 'soft': arc(L); arc(R); break;
     case 'closed': case 'blink': case 'sneaky': flat(L); flat(R); break;
-    case 'surprised': case 'panic': dot(L, 3.5, 4.5); dot(R, 3.5, 4.5); break;
-    case 'wink': arc(L); dot(R, 2.5, 3.5); break;
+    case 'surprised': case 'panic': dot(L, 4, 5); dot(R, 4, 5); break;
+    case 'wink': arc(L); dot(R, 3, 4); break;
     case 'sparkle':
       for (const cx of [L, R]) {
-        PX.rect(g, cx - 1, y - 4, 3, 9, p.ink); PX.rect(g, cx - 4, y - 1, 9, 3, p.ink);
-        PX.rect(g, cx - 1, y - 1, 2, 2, '#FFFFFF');
+        PX.rect(g, cx - 1, y - 3, 2, 7, p.ink); PX.rect(g, cx - 3, y - 1, 7, 2, p.ink);
+        PX.rect(g, cx - 1, y - 1, 1, 1, '#FFFFFF');
       } break;
-    default: dot(L, 2.5, 3.5); dot(R, 2.5, 3.5);
+    default: dot(L, 3, 4); dot(R, 3, 4);
   }
 }
 
@@ -180,65 +181,53 @@ function purinArt(g, x, y, o) {
 
   const K = p.line;
 
-  /* feet */
-  PX.ellInk(g, x - 8 + step, y - 3 + b, 6, 3.5, p.mid, K);
-  PX.ellInk(g, x + 8 - step, y - 3 + b, 6, 3.5, p.mid, K);
+  /* feet — small bumps peeking out at the bottom of the blob */
+  PX.ellInk(g, x - 8 + step, y - 2 + b, 5, 3, p.mid, K);
+  PX.ellInk(g, x + 8 - step, y - 2 + b, 5, 3, p.mid, K);
 
-  /* long floppy ears, behind the body */
+  /* ears: soft ovals that only just bulge past the body. In the reference
+     the whole character is ONE rounded silhouette, not a body with handles. */
   const flop = Math.round((o.walk ? Math.sin(o.walk * Math.PI * 2 + 1) : Math.sin((o.t || 0) * 2)) * 1);
-  PX.rrectInk(g, x - 26, y - 40 + b + flop, 14, 24, 7, p.mid, K);
-  PX.rrectInk(g, x + 12, y - 40 + b - flop, 14, 24, 7, p.mid, K);
-  PX.rrect(g, x - 24, y - 37 + b + flop, 9, 16, 4, p.base);
-  PX.rrect(g, x + 15, y - 37 + b - flop, 9, 16, 4, p.base);
+  PX.ellInk(g, x - 15, y - 17 + b + flop, 4.5, 9.5, p.mid, K);
+  PX.ellInk(g, x + 15, y - 17 + b - flop, 4.5, 9.5, p.mid, K);
 
-  /* arms — only out when he's carrying the cake, the right one reaching */
-  if (o.armsUp) {
-    PX.ellInk(g, x - 20, y - 24 + b, 5, 5, p.mid, K);
-    PX.ellInk(g, x + 21, y - 21 + b, 5, 5, p.mid, K);
-  }
+  /* the right arm reaches out for the cake */
+  if (o.armsUp) PX.ellInk(g, x + 17, y - 14 + b, 4, 4, p.mid, K);
 
-  /* the one big rounded body — its ink ring separates it from the ears */
-  PX.rrectInk(g, x - 19, y - 47 + b, 38, 45, 15, p.base, K);
-  PX.ell(g, x, y - 40 + b, 14, 7, p.lite);           // forehead sheen
+  /* the one big rounded body — 34×32, wider than it is tall */
+  PX.rrectInk(g, x - 17, y - 34 + b, 34, 32, 14, p.base, K);
+  PX.ell(g, x, y - 29 + b, 10, 5, p.lite);           // forehead sheen
 
-  /* his little blue cloth, low on the body like the reference */
-  PX.rrect(g, x - 15, y - 17 + b, 30, 12, 5, p.cloth);
-  PX.rrect(g, x - 15, y - 17 + b, 30, 3, 2, p.clothLt);
-  PX.rect(g, x - 14, y - 17 + b, 28, 1, p.clothDk);
-  PX.rect(g, x - 7, y - 13 + b, 1, 7, p.clothDk);      // soft folds
-  PX.rect(g, x + 6, y - 13 + b, 1, 7, p.clothDk);
+  /* beret: a flat little cap, ~40% of the body width, with a small stem */
+  const by = y - 37 + b;
+  PX.rrectInk(g, x - 1, by - 3, 3, 4, 1, p.beret, K);   // stem
+  PX.rrectInk(g, x - 7, by, 15, 8, 4, p.beret, K);
+  PX.rect(g, x - 5, by + 1, 9, 2, p.beretLite);
+  PX.rrect(g, x - 7, by + 5, 15, 3, 1, p.beretDark);
 
-  /* beret */
-  const by = y - 47 + b;
-  PX.ellInk(g, x, by, 14, 6, p.beret, K);
-  PX.ell(g, x - 2, by - 3, 10, 4, p.beretLite);
-  PX.rrect(g, x - 15, by + 1, 30, 4, 2, p.beretDark);
-  PX.ellInk(g, x + 3, by - 6, 2, 2, p.beret, K);
-
-  /* face */
-  purinEyes(g, x, y - 33 + b, eyeFace, p);
-  PX.ellInk(g, x, y - 27 + b, 3, 2.5, p.nose, K);    // nose
-  PX.rect(g, x - 1, y - 28 + b, 2, 1, '#E0B183');
+  /* face — everything small and clustered in the middle */
+  purinEyes(g, x, y - 21 + b, eyeFace, p);
+  PX.rect(g, x - 1, y - 17 + b, 3, 2, p.nose);        // tiny nose
 
   /* mouth */
-  const my = y - 23 + b;
+  const my = y - 14 + b;
   if (face === 'surprised' || face === 'panic') {
-    PX.ell(g, x, my + 1, 2.5, 3, p.mouth);
+    PX.ell(g, x, my, 2, 2.5, p.mouth);
   } else if (face === 'proud' || face === 'sparkle') {
-    PX.poly(g, [[x - 5, my - 1], [x + 5, my - 1], [x, my + 4]], p.mouth);
+    PX.poly(g, [[x - 3, my - 1], [x + 3, my - 1], [x, my + 3]], p.mouth);
   } else if (face === 'sneaky') {
-    PX.rect(g, x - 4, my, 7, 1, p.mouth); PX.rect(g, x + 3, my - 1, 1, 1, p.mouth);
-  } else {                                            // wide puppy smile
-    PX.rect(g, x - 6, my, 5, 2, p.mouth); PX.rect(g, x + 2, my, 5, 2, p.mouth);
-    PX.rect(g, x - 7, my - 2, 2, 2, p.mouth); PX.rect(g, x + 6, my - 2, 2, 2, p.mouth);
-    PX.rect(g, x - 1, my + 1, 3, 2, p.mouth);
+    PX.rect(g, x - 3, my, 5, 1, p.mouth);
+  } else {                                            // small "w" smile
+    PX.rect(g, x - 3, my, 3, 1, p.mouth); PX.rect(g, x + 1, my, 3, 1, p.mouth);
+    PX.rect(g, x - 4, my - 1, 1, 1, p.mouth); PX.rect(g, x + 4, my - 1, 1, 1, p.mouth);
+    PX.rect(g, x, my + 1, 1, 1, p.mouth);
   }
 
   if (face === 'blush' || face === 'sparkle' || o.blush) {
-    PX.ell(g, x - 14, y - 29 + b, 3.5, 2.5, p.blush);
-    PX.ell(g, x + 14, y - 29 + b, 3.5, 2.5, p.blush);
+    PX.ell(g, x - 11, y - 18 + b, 3, 2, p.blush);
+    PX.ell(g, x + 11, y - 18 + b, 3, 2, p.blush);
   }
-  if (face === 'panic') PX.ell(g, x + 17, y - 44 + b, 2, 2.5, '#9ED8F0');
+  if (face === 'panic') PX.ell(g, x + 16, y - 33 + b, 2, 2.5, '#9ED8F0');
 }
 
 function drawPurin(g, x, y, o = {}) {
@@ -256,7 +245,7 @@ function kuromiEyes(g, x, y, face, p) {
   const L = x - 8, R = x + 8;
   const eye = (cx, rx, ry) => {
     PX.ell(g, cx, y, rx, ry, p.ink);
-    PX.rect(g, cx - rx + 1, y - ry + 1, 2, 2, '#FFFFFF');
+    PX.rect(g, cx - rx + 1, y - ry + 2, 2, 2, '#FFFFFF');
   };
   const arc = (cx) => {
     for (let i = -4; i <= 4; i++) PX.rect(g, cx + i, y + Math.abs(i) * 0.5 - 1.5, 1, 1, p.ink);
@@ -302,40 +291,43 @@ function kuromiArt(g, x, y, o) {
   PX.polyInk(g, [[x + 16, y - 19 + b + tw], [x + 22, y - 22 + b + tw], [x + 18, y - 14 + b + tw]], p.hood, K);
 
   /* arms, then body — the body's ink ring makes them read as separate bumps */
-  PX.ellInk(g, x - 14, y - 14 + b, 4.5, 4.5, p.base, K);
-  PX.ellInk(g, x + 14, y - 14 + b, 4.5, 4.5, p.base, K);
-  PX.rrectInk(g, x - 13, y - 25 + b, 26, 23, 9, p.base, K);
-  PX.rrect(g, x - 10, y - 24 + b, 20, 7, 4, p.lite);
+  PX.ellInk(g, x - 13, y - 15 + b, 4, 4, p.base, K);
+  PX.ellInk(g, x + 13, y - 15 + b, 4, 4, p.base, K);
+  PX.rrectInk(g, x - 11, y - 24 + b, 22, 22, 8, p.base, K);
+  PX.rrect(g, x - 8, y - 23 + b, 16, 6, 3, p.lite);
 
-  /* the two big hood ears, drooping out to the sides, behind the head */
-  const earL = [[x - 14, y - 52 + b], [x - 28, y - 48 + b], [x - 30, y - 34 + b], [x - 19, y - 30 + b], [x - 13, y - 42 + b]];
+  /* The two hood ears. They attach under the dome and sweep UP and OUT so
+     they clear the head on both sides — drawn first, so the head's ink ring
+     cuts a clean line and the dome stays visible between them. */
+  const earL = [[x - 8, y - 46 + b], [x - 14, y - 56 + b], [x - 23, y - 54 + b],
+                [x - 28, y - 41 + b], [x - 23, y - 30 + b], [x - 13, y - 34 + b]];
   const earR = earL.map(pt => [2 * x - pt[0], pt[1]]);
   PX.polyInk(g, earL, p.hood, K);
   PX.polyInk(g, earR, p.hood, K);
-  PX.poly(g, [[x - 17, y - 47 + b], [x - 25, y - 44 + b], [x - 26, y - 37 + b], [x - 19, y - 36 + b]], p.hoodLite);
-  PX.poly(g, [[x + 17, y - 47 + b], [x + 25, y - 44 + b], [x + 26, y - 37 + b], [x + 19, y - 36 + b]], p.hoodLite);
+  PX.poly(g, [[x - 15, y - 51 + b], [x - 22, y - 49 + b], [x - 25, y - 41 + b], [x - 18, y - 40 + b]], p.hoodLite);
+  PX.poly(g, [[x + 15, y - 51 + b], [x + 22, y - 49 + b], [x + 25, y - 41 + b], [x + 18, y - 40 + b]], p.hoodLite);
 
-  /* head: hood shell, then the white face carved back out of it */
-  PX.rrectInk(g, x - 18, y - 53 + b, 36, 35, 14, p.hood, K);
-  PX.rrect(g, x - 13, y - 51 + b, 26, 7, 4, p.hoodLite);      // top sheen
-  PX.rrectInk(g, x - 14, y - 41 + b, 28, 23, 11, p.base, K);  // face
-  PX.rrect(g, x - 11, y - 39 + b, 22, 6, 4, p.lite);
-  PX.poly(g, [[x - 5, y - 42 + b], [x + 5, y - 42 + b], [x, y - 35 + b]], p.hood);  // brow point
+  /* head: hood dome, then the white face carved back out of it */
+  PX.rrectInk(g, x - 16, y - 52 + b, 32, 34, 13, p.hood, K);
+  PX.rrect(g, x - 10, y - 51 + b, 20, 5, 2, p.hoodLite);      // top sheen
+  PX.rrectInk(g, x - 14, y - 40 + b, 28, 22, 10, p.base, K);  // face
+  PX.rrect(g, x - 10, y - 38 + b, 20, 5, 3, p.lite);
+  PX.poly(g, [[x - 5, y - 41 + b], [x + 5, y - 41 + b], [x, y - 34 + b]], p.hood);  // brow point
 
-  /* pink skull badge */
-  const sy = y - 48 + b;
+  /* pink skull badge, centred in the hood band */
+  const sy = y - 47 + b;
   PX.ell(g, x, sy, 5, 4.5, p.skull);
   PX.rrect(g, x - 4, sy + 3, 8, 4, 1, p.skull);
-  PX.rect(g, x - 3, sy - 1, 2, 3, p.skullDark);
-  PX.rect(g, x + 2, sy - 1, 2, 3, p.skullDark);
-  PX.rect(g, x - 1, sy + 2, 2, 2, p.skullDark);
+  PX.rect(g, x - 3, sy - 1, 3, 3, p.skullDark);
+  PX.rect(g, x + 1, sy - 1, 3, 3, p.skullDark);
+  PX.rect(g, x - 1, sy + 3, 2, 2, p.skullDark);
   PX.rect(g, x - 2, sy + 5, 1, 2, p.skullDark);
   PX.rect(g, x + 2, sy + 5, 1, 2, p.skullDark);
 
   /* face */
-  kuromiEyes(g, x, y - 32 + b, eyeFace, p);
+  kuromiEyes(g, x, y - 31 + b, eyeFace, p);
 
-  const my = y - 24 + b;
+  const my = y - 23 + b;
   if (face === 'surprised') PX.ell(g, x, my + 1, 2.5, 3, p.mouth);
   else if (face === 'annoyed') PX.rect(g, x - 4, my, 9, 1, p.mouth);
   else if (face === 'happy' || face === 'soft') {
@@ -349,12 +341,12 @@ function kuromiArt(g, x, y, o) {
   }
 
   /* blush — she basically always has it, like the reference */
-  PX.ell(g, x - 12, y - 27 + b, 3.5, 2.5, p.blush);
-  PX.ell(g, x + 12, y - 27 + b, 3.5, 2.5, p.blush);
+  PX.ell(g, x - 11, y - 26 + b, 3.5, 2.5, p.blush);
+  PX.ell(g, x + 11, y - 26 + b, 3.5, 2.5, p.blush);
 
   if (face === 'annoyed') {
-    PX.rect(g, x + 12, y - 44 + b, 5, 1, '#FF6E8A');
-    PX.rect(g, x + 14, y - 46 + b, 1, 5, '#FF6E8A');
+    PX.rect(g, x + 18, y - 46 + b, 5, 1, '#FF6E8A');
+    PX.rect(g, x + 20, y - 48 + b, 1, 5, '#FF6E8A');
   }
 }
 
