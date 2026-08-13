@@ -205,7 +205,7 @@ const ACTIONS = {
       for (let k = 0; k < 4; k++) FX.sparkle(W.cake.x + (Math.random() - 0.5) * 26, W.cake.y - 22);
       await wait(150);
     }
-    W.glowX = W.cake.x; W.glowY = W.cake.y - 12;
+    W.glowX = W.cake.x; W.glowY = W.cake.y - 16;
     await Promise.all([tween(W.cake, { lit: 1 }, 700), tween(W, { glow: 0.7 }, 900)]);
     for (let i = 0; i < 10; i++) FX.sparkle(W.cake.x + (Math.random() - 0.5) * 34, W.cake.y - 18 - Math.random() * 12);
     await wait(250);
@@ -214,7 +214,7 @@ const ACTIONS = {
   async dimLights() {
     AudioKit.duckMusic(0.07);
     /* "come closer" — she actually does */
-    tween(W.kuromi, { x: 192 }, 1600, ease.inOut);
+    tween(W.kuromi, { x: 200 }, 1600, ease.inOut);
     await Promise.all([tween(W, { dim: 0.66 }, 1500), tween(W, { glow: 1 }, 1500)]);
     for (let i = 0; i < 6; i++) { FX.heart(W.cake.x + (Math.random() - 0.5) * 40, W.cake.y - 10, { life: 2.4 }); }
   },
@@ -338,8 +338,8 @@ function update(dt) {
   updateChar(W.kuromi, dt);
 
   if (W.purin.walking) W.purin.walk += dt * 2.6;
-  W.cake.x = Math.round(W.purin.x + 26);
-  W.cake.y = W.purin.y - 9;
+  W.cake.x = Math.round(W.purin.x + 32);
+  W.cake.y = W.purin.y - 6;
   if (W.cake.smoke) W.cake.smokeT = Math.min(1, W.cake.smokeT + dt * 0.5);
   if (W.photoGlow > 0) W.photoGlow = Math.max(0, W.photoGlow - dt * 2);
 
