@@ -1,7 +1,7 @@
-# ♡ Happy Birthday, Kuromi ♡
+# ♡ Happy Birthday, My Wife ♡
 
-A tiny pixel-art visual novel. Purin sneaks into a cosy house at midnight with a
-birthday cake; Kuromi gets to answer him however she likes. A few scenes, three
+A tiny pixel-art visual novel. Syl sneaks into a cosy house at midnight with a
+birthday cake; she gets to answer him however she likes. A few scenes, three
 choice points, a cake to blow out, and confetti.
 
 **Live:** https://cie1vester.github.io/hb/
@@ -15,11 +15,16 @@ touch anything else.
 
 | What | Where |
 |---|---|
-| Her name (banner + dialogue) | `CONFIG.NAME` at the top |
+| Banner text / the label above her replies | `CONFIG.NAME` |
+| How Syl addresses her out loud | `CONFIG.CALL` |
+| The label above his lines | `CONFIG.HIM` |
 | The closing love letter | the `LETTER` block, marked `✏️ EDIT ME` |
 | Any line of dialogue | the `STORY` object — just edit the `text` |
-| Kuromi's clickable replies | the `choices` arrays |
+| Her clickable replies | the `choices` arrays |
 | Easter-egg lines on the wall photo | `PHOTO_LINES` |
+
+To use her real name instead, set `NAME: 'Her Name'` and `CALL: 'Her Name'`.
+The banner font auto-shrinks for longer names.
 
 A story node looks like this:
 
@@ -33,11 +38,13 @@ q1: {
 }
 ```
 
+(`purin` / `kuromi` survive as internal role keys — they just mean him and her.)
+
 `sass` totals across the three choice points (0–7) pick one of three endings:
-5+ is bratty, 2–4 is the middle, 0–1 is soft. `pFace` / `kFace` set expressions
-(`happy blush smug soft annoyed surprised sparkle panic proud sneaky wink`), and
-`action` / `after` fire a cinematic (`openDoor walkIn lightCandles dimLights
-blowPrompt celebrate ending finish`).
+5+ is bratty, 2–4 is the middle, 0–1 is soft. The wish is weighted heaviest.
+`pFace` / `kFace` set expressions (`happy blush smug soft annoyed surprised
+sparkle panic proud sneaky wink`), and `action` / `after` fire a cinematic
+(`openDoor walkIn lightCandles dimLights blowPrompt celebrate ending finish`).
 
 ## Previewing your changes
 
@@ -74,5 +81,9 @@ The scene renders to a 320×180 canvas that's upscaled with
 `image-rendering: pixelated`, and every position is rounded to a whole pixel so
 the motion reads as real pixel-game animation rather than smooth CSS.
 
-The characters are original artwork drawn in code — inspired by Sanrio's
-Pompompurin and Kuromi, not copied from them. Made as a birthday present.
+Characters are built from rounded-rect and ellipse primitives, then stamped four
+times in silhouette to give them the 1px outline hand-made pixel sprites have —
+plus internal outlines so an ear reads as separate from a head.
+
+The artwork is original, drawn in code — inspired by Sanrio's Pompompurin and
+Kuromi, not copied from them. Made as a birthday present.

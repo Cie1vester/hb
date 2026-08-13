@@ -313,7 +313,7 @@ function drawBunting(g, st) {
 
   /* the name, in big pixel letters under the bunting */
   if (st.nameIn > 0) {
-    const nm = ((window.CONFIG && CONFIG.NAME) || 'Kuromi').toUpperCase();
+    const nm = ((window.CONFIG && CONFIG.NAME) || 'My Wife').toUpperCase();
     const s = bigWidth(nm, 2) <= 250 ? 2 : 1;
     const w = bigWidth(nm, s), nx = Math.round(160 - w / 2);
     const ny = Math.round(50 + off + (1 - st.nameIn) * -20);

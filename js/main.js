@@ -94,12 +94,11 @@ resetWorld();
 
 let typing = false, skipType = null, onAdvance = null;
 
-const LABEL = { purin: 'PURIN', kuromi: 'KUROMI', narrator: '' };
-
 function setSpeaker(who) {
   W.talker = who === 'narrator' ? null : who;
   els.dialog.dataset.who = who;
-  els.speaker.textContent = who === 'narrator' ? '' : (who === 'kuromi' ? CONFIG.NAME.toUpperCase() : LABEL.purin);
+  els.speaker.textContent = who === 'narrator' ? ''
+    : (who === 'kuromi' ? CONFIG.NAME : CONFIG.HIM).toUpperCase();
   els.nameplate.hidden = who === 'narrator';
 }
 
@@ -503,7 +502,7 @@ els.hugBtn.addEventListener('click', async () => {
   W.cake.visible = false;
   W.purin.armsUp = false;
   W.purin.walking = true;
-  await tween(W.purin, { x: W.kuromi.x - 28 }, 800, ease.out);
+  await tween(W.purin, { x: W.kuromi.x - 36 }, 800, ease.out);
   W.purin.walking = false;
   W.purin.face = 'blush';
   W.kuromi.face = 'blush';
@@ -512,7 +511,7 @@ els.hugBtn.addEventListener('click', async () => {
   FX.heartBurst((W.purin.x + W.kuromi.x) / 2, W.kuromi.y - 48, 22);
   for (let i = 0; i < 30; i++) FX.heart(Math.random() * 320, 178, { speed: 1.5, life: 2.8, s: 3 });
   setSpeaker('purin');
-  await typeText('...There. I got you. Happy birthday, ' + CONFIG.NAME + '-chan. ♡', { noAdvance: true });
+  await typeText('...There. I got you. Happy birthday, ' + CONFIG.CALL + '. ♡', { noAdvance: true });
   els.hugBtn.disabled = false;
   els.hugBtn.textContent = '🎀 again ♡';
 });

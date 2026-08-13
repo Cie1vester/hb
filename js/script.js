@@ -5,11 +5,11 @@
      id: { speaker, text, next }                 ← a spoken line
      id: { speaker:'kuromi', choices:[ ... ] }   ← her clickable replies
 
-   speaker : 'purin' | 'kuromi' | 'narrator'
-   pFace   : Purin's expression  — normal happy blush proud sneaky panic
-                                    surprised sparkle wink closed
-   kFace   : Kuromi's expression — smug happy blush soft annoyed
-                                    surprised sparkle wink closed
+   speaker : 'purin' (= Syl) | 'kuromi' (= her) | 'narrator'
+   pFace   : Syl's expression — normal happy blush proud sneaky panic
+                                surprised sparkle wink closed
+   kFace   : her expression   — smug happy blush soft annoyed
+                                surprised sparkle wink closed
    action  : a cinematic to play BEFORE the line
              openDoor · walkIn · lightCandles · dimLights · blowPrompt
              celebrate · ending · finish
@@ -17,16 +17,18 @@
    ══════════════════════════════════════════════════════════════ */
 
 const CONFIG = {
-  NAME: 'Kuromi',            // shows in the banner and in Purin's lines
+  NAME: 'My Wife',     // the banner, and the label above her replies
+  CALL: 'my love',     // how Syl actually addresses her out loud
+  HIM: 'Syl',          // the label above his lines
   START_NODE: 'start'
 };
 
 /* ✏️ ─────────── EDIT ME ─────────── ✏️
    Your note to her, shown behind the 💌 button at the end.
    Write it in your own words — line breaks are kept as-is. */
-const LETTER = `Happy birthday, my Kuromi.
+const LETTER = `Happy birthday, my love.
 
-I built this whole tiny world just so a very round pudding dog could walk through a door and hand you a cake. It seemed like the correct amount of effort.
+I built this whole tiny world just so a very round someone in a brown beret could walk through a door and hand you a cake. It seemed like the correct amount of effort.
 
 Thank you for every ordinary evening. For the bickering, for the snacks at midnight, for being the sharpest and the softest person I know — usually within the same ten seconds.
 
@@ -34,12 +36,12 @@ I don't need a wish this year. I already got the good one.
 
 I love you. Please eat the cake. It took four tries.
 
-— your Purin ♡`;
+— your Syl ♡`;
 
 /* little lines that pop up if she clicks the photo on the wall */
 const PHOTO_LINES = [
   'The photo from that day. You were mid-sentence, as usual.',
-  'Purin insisted this one goes on the wall. He picked the frame himself.',
+  'Syl insisted this one goes on the wall. He picked the frame himself.',
   'Two idiots. One heart. Excellent hair days all round.'
 ];
 
@@ -55,7 +57,7 @@ const STORY = {
 
   walkin: {
     action: 'walkIn', speaker: 'purin', pFace: 'sneaky', kFace: 'smug',
-    text: 'Psst... Kuromi-chan... are you awake?',
+    text: 'Psst... my love... are you awake?',
     next: 'q1'
   },
 
@@ -70,7 +72,7 @@ const STORY = {
 
   q1a: {
     speaker: 'purin', pFace: 'surprised',
-    text: 'Hours?! Kuromi-chan, you could have HELPED me find the matches!',
+    text: 'Hours?! You could have HELPED me find the matches!',
     next: 'q1a2'
   },
   q1a2: {
@@ -87,7 +89,7 @@ const STORY = {
   q1b2: { speaker: 'kuromi', kFace: 'annoyed', text: 'I heard that.', next: 'q1b3' },
   q1b3: {
     speaker: 'purin', pFace: 'panic',
-    text: "AAH— I mean! More cake for KUROMI! Obviously! That's what I said!",
+    text: "AAH— I mean! More cake for YOU! Obviously! That's what I said!",
     next: 's2'
   },
 
@@ -156,7 +158,7 @@ const STORY = {
   },
   s3: {
     speaker: 'purin', pFace: 'happy', kFace: 'soft',
-    text: 'Make a wish, Kuromi-chan. But keep it small — I still have to make it come true.',
+    text: 'Make a wish, my love. But keep it small — I still have to make it come true.',
     next: 'q3'
   },
 
@@ -211,7 +213,7 @@ const STORY = {
 
   s5: {
     action: 'celebrate', speaker: 'purin', pFace: 'sparkle', kFace: 'surprised',
-    text: 'HAPPY BIRTHDAY, KUROMI-CHAN!!!',
+    text: 'HAPPY BIRTHDAY, MY LOVE!!!',
     next: 'endpick'
   },
 
@@ -235,7 +237,7 @@ const STORY = {
   },
   end_mid2: {
     speaker: 'kuromi', kFace: 'happy',
-    text: 'Thank you, Purin. Now put me down before you drop the cake.',
+    text: 'Thank you, Syl. Now put me down before you drop the cake.',
     next: 'finale'
   },
 
