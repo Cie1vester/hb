@@ -46,6 +46,16 @@ q1: {
 sparkle panic proud sneaky wink`), and `action` / `after` fire a cinematic
 (`openDoor walkIn lightCandles dimLights blowPrompt celebrate ending finish`).
 
+## Swapping in your own character art
+
+Drop `syl.png` and `wife.png` into [`assets/`](assets/) and they replace the
+drawn characters entirely — no code changes. Transparent-background PNGs of
+small pixel art work best; they're scaled up by a whole number so they stay
+crisp. See [`assets/README.md`](assets/README.md) for sizing.
+
+If a file isn't there, the code-drawn fallback is used, so the site never
+breaks while you're still picking art.
+
 ## Previewing your changes
 
 Just double-click `index.html`. There's no build step and no server needed — the
